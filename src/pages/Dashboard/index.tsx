@@ -20,6 +20,7 @@ const Dashboard: React.FC = () => {
 
       <Categories>
         <strong>Choose a category:</strong>
+
         <Link to="/">None</Link>
         <Link to="/booklistbycategory/reading">Currently Reading</Link>
         <Link to="/booklistbycategory/wantToRead">Want to Read</Link>
