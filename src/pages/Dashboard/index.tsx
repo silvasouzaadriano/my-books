@@ -2,9 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FiChevronRight } from 'react-icons/fi';
 
-import logoImg from '../../assets/logo.jpg';
-
-import { Header, Categories, Books } from './styles';
+import { Categories, Books } from './styles';
 
 import {
   useBookCategory,
@@ -21,11 +19,6 @@ const Dashboard: React.FC = () => {
 
   return (
     <>
-      <Header>
-        <img src={logoImg} alt="My Books" />
-        <h1>MyBooks</h1>
-      </Header>
-
       <Categories>
         <select name="book-category" id="book-category" onChange={() => {}}>
           <option value="0">Select a category</option>

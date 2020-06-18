@@ -1,23 +1,6 @@
 import styled from 'styled-components';
 import { shade } from 'polished';
 
-export const Header = styled.div`
-  max-width: 65vw;
-  display: flex;
-  align-items: center;
-
-  img {
-    max-width: 5%;
-  }
-
-  h1 {
-    font-size: 5vh;
-    margin-left: 16px;
-    color: #3a3a3a;
-    line-height: 56px;
-  }
-`;
-
 export const Categories = styled.div`
   max-width: 65vw;
   display: flex;
