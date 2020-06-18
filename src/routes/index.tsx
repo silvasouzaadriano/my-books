@@ -10,7 +10,10 @@ import ViewDetailBook from '../pages/Book/Detail';
 const Routes: React.FC = () => (
   <Switch>
     <Route path="/" exact component={Dashboard} />
-    <Route path="/booklistbycategory/:id" component={BookListByCategory} />
+    <Route
+      path="/booklistbycategory/:id/:title"
+      component={BookListByCategory}
+    />
     <Route path="/addbook" component={AddBook} />
     <Route path="/editbook" component={EditBook} />
     <Route path="/viewdetailbook" component={ViewDetailBook} />

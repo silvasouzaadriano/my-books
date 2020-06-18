@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect, useCallback, ChangeEvent } from 'react';
+import { Link, useHistory } from 'react-router-dom';
 import { FiChevronRight } from 'react-icons/fi';
 
 import { Categories, Books } from './styles';
@@ -12,15 +12,35 @@ import {
 const Dashboard: React.FC = () => {
   const { bookCategory } = useBookCategory();
   const [bookCategories, setBookCategories] = useState<BookCategoryState[]>([]);
+  const history = useHistory();
 
   useEffect(() => {
     setBookCategories(bookCategory);
   }, [bookCategory]);
 
+  const handleSelectCategory = useCallback(
+    (event: ChangeEvent<HTMLSelectElement>) => {
+      const bookCategorySelected = event.target.value;
+      const bookCategorySelectedIndex = event.target.options.selectedIndex;
+      const bookCategoryTextSelected =
+        event.target.options[bookCategorySelectedIndex].innerText;
+
+      if (bookCategorySelected !== '0' && bookCategorySelected !== 'none')
+        history.push(
+          `/booklistbycategory/${bookCategorySelected}/${bookCategoryTextSelected}`,
+        );
+    },
+    [history],
+  );
+
   return (
     <>
       <Categories>
-        <select name="book-category" id="book-category" onChange={() => {}}>
+        <select
+          name="book-category"
+          id="book-category"
+          onChange={handleSelectCategory}
+        >
           <option value="0">Select a category</option>
           {bookCategories.map((category) => (
             <option key={category.id} value={category.id}>
