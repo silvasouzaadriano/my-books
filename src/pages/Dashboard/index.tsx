@@ -9,9 +9,28 @@ import {
   BookCategoryState,
 } from '../../context/BookCategoryContext';
 
+interface Book {
+  id: string;
+  timestamp: Date;
+  title: string;
+  description: string;
+  author: string;
+  category: string;
+  deleted?: boolean;
+}
+
 const Dashboard: React.FC = () => {
   const { bookCategory } = useBookCategory();
   const [bookCategories, setBookCategories] = useState<BookCategoryState[]>([]);
+  const [books, setBooks] = useState<Book[]>(() => {
+    const storagedBooks = localStorage.getItem('@MyBooks:books');
+
+    if (storagedBooks) {
+      return JSON.parse(storagedBooks);
+    }
+    return [];
+  });
+
   const history = useHistory();
 
   useEffect(() => {
@@ -61,48 +80,18 @@ const Dashboard: React.FC = () => {
       </Categories>
 
       <Books>
-        <Link to="/viewdetailbook">
-          <div>
+        {books.map((book) => (
+          <Link to="/viewdetailbook">
             <div>
-              <strong>Dom Casmurro</strong>
-              <span>16/06/2020</span>
+              <div>
+                <strong>{book.title}</strong>
+                <span>{book.timestamp}</span>
+              </div>
+              <p>{book.description}</p>
             </div>
-            <p>
-              Em “Dom Casmurro”, lançado em 1900, Machado de Assis cria um
-              enredo enigmático, cheio de lacunas e indícios que ora apontam
-              para o adultério de Capitu, ora o descreditam.
-            </p>
-          </div>
-          <FiChevronRight size={20} />
-        </Link>
-        <Link to="/viewdetailbook">
-          <div>
-            <div>
-              <strong>Dom Casmurro</strong>
-              <span>16/06/2020</span>
-            </div>
-            <p>
-              Em “Dom Casmurro”, lançado em 1900, Machado de Assis cria um
-              enredo enigmático, cheio de lacunas e indícios que ora apontam
-              para o adultério de Capitu, ora o descreditam.
-            </p>
-          </div>
-          <FiChevronRight size={20} />
-        </Link>
-        <Link to="/viewdetailbook">
-          <div>
-            <div>
-              <strong>Dom Casmurro</strong>
-              <span>16/06/2020</span>
-            </div>
-            <p>
-              Em “Dom Casmurro”, lançado em 1900, Machado de Assis cria um
-              enredo enigmático, cheio de lacunas e indícios que ora apontam
-              para o adultério de Capitu, ora o descreditam.
-            </p>
-          </div>
-          <FiChevronRight size={20} />
-        </Link>
+            <FiChevronRight size={20} />
+          </Link>
+        ))}
       </Books>
     </>
   );

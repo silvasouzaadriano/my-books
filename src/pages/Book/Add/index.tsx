@@ -53,7 +53,7 @@ const AddBook: React.FC = () => {
   const [bookCategories, setBookCategories] = useState<BookCategoryState[]>([]);
   const [bookCategoryId, setBookcategoryId] = useState('none');
   const [newBookData, setNewBookData] = useState<NewBookData[]>(() => {
-    const storagedBooks = localStorage.getItem('@MyBooks:newBookData');
+    const storagedBooks = localStorage.getItem('@MyBooks:books');
 
     if (storagedBooks) {
       return JSON.parse(storagedBooks);
@@ -68,7 +68,7 @@ const AddBook: React.FC = () => {
   }, [bookCategory]);
 
   useEffect(() => {
-    localStorage.setItem('@MyBooks:newBookData', JSON.stringify(newBookData));
+    localStorage.setItem('@MyBooks:books', JSON.stringify(newBookData));
   }, [newBookData]);
 
   const handleSubmit = useCallback(
