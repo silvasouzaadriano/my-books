@@ -11,7 +11,7 @@ export const Header = styled.div`
   }
 
   h1 {
-    font-size: 3vw;
+    font-size: 5vh;
     margin-left: 16px;
     color: #3a3a3a;
     line-height: 56px;
@@ -22,29 +22,7 @@ export const Categories = styled.div`
   max-width: 65vw;
   display: flex;
   align-items: center;
-  font-size: 1.4vw;
-  margin-top: 50px;
-
-  @media (max-width: 1024px) {
-    max-width: 75vw;
-  }
-
-  @media (max-width: 768px) {
-    max-width: 85vw;
-    font-size: 1.6vw;
-  }
-
-  @media (max-width: 425px) {
-    font-size: 1.4vw;
-  }
-
-  @media (max-width: 375px) {
-    font-size: 1.2vw;
-  }
-
-  @media (max-width: 320px) {
-    font-size: 1.1vw;
-  }
+  margin-top: 60px;
 
   strong {
     margin-right: 16px;
@@ -69,36 +47,27 @@ export const Categories = styled.div`
     border: 0;
     color: #fff;
     font-weight: bold;
+    font-size: 2.5vh;
     transition: background-color 0.2s;
+    flex-wrap: wrap;
 
     &:hover {
       background: ${shade(0.2, '#04d361')};
     }
 
     @media (max-width: 768px) {
-      font-size: 1.5vw;
-      width: 90px;
-      height: 30px;
+      font-size: 2.5vh;
     }
 
     @media (max-width: 425px) {
-      width: 35px;
-      height: 18px;
-    }
-
-    @media (max-width: 375px) {
-      width: 33px;
-      height: 15px;
-    }
-
-    @media (max-width: 320px) {
-      width: 30px;
-      height: 10px;
+      width: 60px;
+      height: 30px;
+      font-size: 2vh;
     }
   }
 
   select {
-    width: 128px;
+    width: 130px;
     height: 35px;
     appearance: none;
     background: #04d361;
@@ -107,41 +76,24 @@ export const Categories = styled.div`
     color: #fff;
     font-weight: bold;
     padding: 10px;
+    margin-right: 16px;
     transition: background-color 0.2s;
 
     &:hover {
       background: ${shade(0.2, '#04d361')};
     }
 
-    @media (max-width: 768px) {
-      font-size: 1.5vw;
-      width: 110px;
-      height: 30px;
-      padding: 8px;
-    }
-
     @media (max-width: 425px) {
-      font-size: 1.3vw;
-      width: 50px;
-      height: 18px;
-      padding: 2px;
-    }
-
-    @media (max-width: 375px) {
-      width: 45px;
-      height: 15px;
-    }
-
-    @media (max-width: 320px) {
-      width: 40px;
-      height: 10px;
+      width: 90px;
+      height: 30px;
+      font-size: 2vh;
     }
   }
 `;
 
 export const Books = styled.div`
   max-width: 63vw;
-  margin-top: 80px;
+  margin-top: 40px;
 
   @media (max-width: 1024px) {
     max-width: 72vw;
@@ -153,6 +105,7 @@ export const Books = styled.div`
 
   a {
     width: 100%;
+    height: 100px;
     background: #fff;
     border-radius: 5px;
     display: block;
@@ -173,9 +126,20 @@ export const Books = styled.div`
   }
 
   div {
-    strong {
-      font-size: 1.5vw;
-      color: #3d3d4d;
+    > div {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      strong {
+        font-size: 1.5vw;
+        color: #3d3d4d;
+        margin-right: 10px;
+      }
+
+      span {
+        color: #a8a8b3;
+      }
     }
 
     p {
