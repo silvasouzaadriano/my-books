@@ -4,8 +4,8 @@ export const Container = styled.div`
   position: relative;
 
   span {
-    background: ${props => props.theme.colors.placeholder};
-    color: ${props => props.theme.colors.secondary};
+    background: #bce0fd;
+    color: #020202;
     padding: 8px;
     border-radius: 4px;
     font-size: 14px;
@@ -23,7 +23,7 @@ export const Container = styled.div`
     &::before {
       content: '';
       border-style: solid;
-      border-color: ${props => props.theme.colors.placeholder} transparent;
+      border-color: #bce0fd transparent;
       border-width: 6px 6px 0 6px;
       top: 100%;
       position: absolute;
