@@ -42,7 +42,7 @@ interface NewBookData {
   description: string;
   author: string;
   category: string;
-  deleted?: boolean;
+  deleted: boolean;
 }
 
 const AddBook: React.FC = () => {
@@ -78,9 +78,15 @@ const AddBook: React.FC = () => {
 
         // Validate the form
         const schema = Yup.object().shape({
-          title: Yup.string().required('Title is required'),
-          description: Yup.string().required('Description is required'),
-          author: Yup.string().required('Author is required'),
+          title: Yup.string()
+            .required('Title is required')
+            .max(50, 'Title exceeded 50 characters'),
+          description: Yup.string()
+            .required('Description is required')
+            .max(150, 'Description exceeded 150 characters'),
+          author: Yup.string()
+            .required('Author is required')
+            .max(30, 'Auhtor exceeded 50 characters'),
         });
 
         await schema.validate(data, {
@@ -102,6 +108,7 @@ const AddBook: React.FC = () => {
           description: data.description,
           author: data.author,
           category: bookCategoryId,
+          deleted: false,
         };
 
         setNewBookData((OldBook) => [...OldBook, newBook]);

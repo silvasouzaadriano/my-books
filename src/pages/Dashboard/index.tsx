@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, ChangeEvent } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { FiChevronRight } from 'react-icons/fi';
 
-import { Categories, Books } from './styles';
+import { Categories, Container, Book } from './styles';
 
 import {
   useBookCategory,
@@ -31,11 +31,52 @@ const Dashboard: React.FC = () => {
     return [];
   });
 
+  const bookCategoryIdDefault = 'none';
   const history = useHistory();
+
+  useEffect(() => {
+    const newBookList: Book[] = books
+      .filter(
+        (book) => book.category === bookCategoryIdDefault && !book.deleted,
+      )
+      .sort(function compare(a, b) {
+        if (a.title < b.title) return -1;
+        if (a.title > b.title) return 1;
+        return 0;
+      });
+    setBooks(newBookList);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     setBookCategories(bookCategory);
   }, [bookCategory]);
+
+  const handleBookSort = useCallback(
+    (event: ChangeEvent<HTMLSelectElement>) => {
+      const bookSortSelected = event.target.value;
+      if (bookSortSelected !== 'none') {
+        const newBookList: Book[] = books
+          .filter(
+            (book) => book.category === bookCategoryIdDefault && !book.deleted,
+          )
+          .sort(function compare(a, b) {
+            if (bookSortSelected === 'date') {
+              if (a.timestamp < b.timestamp) return -1;
+              if (a.timestamp > b.timestamp) return 1;
+            } else {
+              if (a.title < b.title) return -1;
+              if (a.title > b.title) return 1;
+            }
+            return 0;
+          });
+        setBooks(newBookList);
+      } else {
+        setBooks(books);
+      }
+    },
+    [books],
+  );
 
   const handleSelectCategory = useCallback(
     (event: ChangeEvent<HTMLSelectElement>) => {
@@ -68,7 +109,11 @@ const Dashboard: React.FC = () => {
           ))}
         </select>
 
-        <select name="book-ordering" id="book-ordering" onChange={() => {}}>
+        <select
+          name="book-ordering"
+          id="book-ordering"
+          onChange={handleBookSort}
+        >
           <option value="none">Select a ordering</option>
           <option value="title">Title</option>
           <option value="date">Date</option>
@@ -78,21 +123,24 @@ const Dashboard: React.FC = () => {
           <button type="button">Add Book</button>
         </Link>
       </Categories>
-
-      <Books>
+      <Container>
         {books.map((book) => (
-          <Link to="/viewdetailbook">
-            <div>
-              <div>
+          <Link to="/viewdetailbook" key={book.id}>
+            <Book>
+              <main>
                 <strong>{book.title}</strong>
                 <span>{book.timestamp}</span>
-              </div>
-              <p>{book.description}</p>
-            </div>
-            <FiChevronRight size={20} />
+              </main>
+              <aside>
+                <p>{book.description}</p>
+                <div>
+                  <FiChevronRight />
+                </div>
+              </aside>
+            </Book>
           </Link>
         ))}
-      </Books>
+      </Container>
     </>
   );
 };
