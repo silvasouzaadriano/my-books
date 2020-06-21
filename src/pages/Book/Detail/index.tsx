@@ -1,6 +1,9 @@
-import React, { useRef, ChangeEvent } from 'react';
-import { Link } from 'react-router-dom';
+/* eslint-disable import/no-duplicates */
+import React, { useRef, useState, useEffect, ChangeEvent } from 'react';
+import { Link, useRouteMatch } from 'react-router-dom';
 import { FiArrowLeft } from 'react-icons/fi';
+import { format, parseISO } from 'date-fns';
+import pt from 'date-fns/locale/pt-BR';
 
 import { Form } from '@unform/web';
 
@@ -16,11 +19,52 @@ import { useToast } from '../../../context/ToastContext';
 
 import getValidationErrors from '../../../utils/getValidationErrors';
 
+import { useBookCategory } from '../../../context/BookCategoryContext';
+
 import { Header, BookContainer, CommentContainer, Comment } from './styles';
 
+interface Book {
+  id: string;
+  timestamp: Date;
+  title: string;
+  description: string;
+  author: string;
+  category: string;
+  deleted?: boolean;
+}
+
+interface BookIdParam {
+  id: string;
+}
+
 const ViewDetailBook: React.FC = () => {
+  const { params } = useRouteMatch<BookIdParam>();
   const formRef = useRef<FormHandles>(null);
   const { addToast } = useToast();
+  const [bookDetail, setBookDetail] = useState<Book[]>(() => {
+    const storagedBooks = localStorage.getItem('@MyBooks:books');
+
+    if (storagedBooks) {
+      return JSON.parse(storagedBooks);
+    }
+    return [];
+  });
+  const { bookCategory } = useBookCategory();
+
+  useEffect(() => {
+    const bookFiltered = bookDetail.filter((book) => book.id === params.id);
+
+    const bookCategoryFiltered = bookCategory.filter(
+      (category) => category.id === bookFiltered[0].category,
+    );
+
+    bookFiltered[0].category = bookCategoryFiltered[0].title;
+
+    setBookDetail(bookFiltered);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <>
       <Header>
@@ -40,34 +84,33 @@ const ViewDetailBook: React.FC = () => {
         <div className="head">
           <div className="category">
             <span>Category </span>
-            <p>Want to Read</p>
+            <p>{bookDetail[0].category}</p>
           </div>
 
           <div className="creationDate">
             <span>Creation Date</span>
-            <p>20/06/2020</p>
+            <p>
+              {format(
+                parseISO(String(bookDetail[0].timestamp)),
+                "dd'/'MM'/'yyyy HH:mm:ss.SSS",
+                {
+                  locale: pt,
+                },
+              )}
+            </p>
           </div>
         </div>
         <div className="title">
           <span>Title</span>
-          <p>Dom Casmurro</p>
+          <p>{bookDetail[0].title}</p>
         </div>
         <div className="description">
           <span>Description</span>
-          <p>
-            Um livro muito importante da obra de Machado de Assis. Conta a
-            história de Bentinho e Capitu. Um livro muito importante da obra de
-            Machado de Assis. Conta a história de Bentinho e Capitu. Um livro
-            muito importante da obra de Machado de Assis. Conta a história de
-            Bentinho e Capitu. Um livro muito importante da obra de Machado de
-            Assis. Conta a história de Bentinho e Capitu. Um livro muito
-            importante da obra de Machado de Assis. Conta a história de Bentinho
-            e Capitu.
-          </p>
+          <p>{bookDetail[0].description}</p>
         </div>
         <div className="author">
           <span>Author</span>
-          <p>Machado de Assis</p>
+          <p>{bookDetail[0].author}</p>
         </div>
       </BookContainer>
 
