@@ -5,7 +5,7 @@ export const Categories = styled.div`
   max-width: 65vw;
   display: flex;
   align-items: center;
-  margin-top: 60px;
+  margin-top: 50px;
 
   strong {
     margin-right: 16px;

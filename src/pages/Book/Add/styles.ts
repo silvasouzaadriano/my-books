@@ -6,7 +6,7 @@ export const Title = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 60px;
+  margin-top: 50px;
 
   a {
     display: flex;

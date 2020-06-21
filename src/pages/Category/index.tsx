@@ -104,7 +104,7 @@ const BookListByCategory: React.FC = () => {
 
       <Container>
         {books.map((book) => (
-          <Link to="/viewdetailbook" key={book.id}>
+          <Link to={`/viewdetailbook/${book.id}`} key={book.id}>
             <Book>
               <main>
                 <strong>{book.title}</strong>
