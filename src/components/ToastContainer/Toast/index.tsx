@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useEffect } from 'react';
 import {
   FiAlertCircle,
@@ -12,7 +13,7 @@ import { Container } from './styles';
 
 interface ToastProps {
   message: ToastMessage;
-  style: object;
+  style: Record<string, unknown>;
 }
 
 const icons = {
@@ -38,7 +39,7 @@ const Toast: React.FC<ToastProps> = ({ message, style }) => {
     <Container
       key={message.id}
       type={message.type}
-      hasDescription={!!message.description}
+      hasdescription={Number(!!message.description)}
       style={style}
     >
       {icons[message.type || 'info']}

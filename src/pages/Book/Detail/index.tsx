@@ -1,6 +1,6 @@
 /* eslint-disable import/no-duplicates */
-import React, { useRef, useState, useEffect, ChangeEvent } from 'react';
-import { Link, useRouteMatch } from 'react-router-dom';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
+import { Link, useRouteMatch, useHistory } from 'react-router-dom';
 import { FiArrowLeft } from 'react-icons/fi';
 import { format, parseISO } from 'date-fns';
 import pt from 'date-fns/locale/pt-BR';
@@ -8,20 +8,17 @@ import pt from 'date-fns/locale/pt-BR';
 import { Form } from '@unform/web';
 
 import { FormHandles } from '@unform/core';
-import * as Yup from 'yup';
-
-import { uuid } from 'uuidv4';
 
 import Input from '../../../components/Input';
 import Button from '../../../components/Button';
 
-import { useToast } from '../../../context/ToastContext';
-
-import getValidationErrors from '../../../utils/getValidationErrors';
-
 import { useBookCategory } from '../../../context/BookCategoryContext';
 
-import { Header, BookContainer, CommentContainer, Comment } from './styles';
+import { useToast } from '../../../context/ToastContext';
+
+import Comments from '../Comments';
+
+import { Header, BookContainer } from './styles';
 
 interface Book {
   id: string;
@@ -39,7 +36,7 @@ interface BookIdParam {
 
 const ViewDetailBook: React.FC = () => {
   const { params } = useRouteMatch<BookIdParam>();
-  const formRef = useRef<FormHandles>(null);
+
   const { addToast } = useToast();
   const [bookDetail, setBookDetail] = useState<Book[]>(() => {
     const storagedBooks = localStorage.getItem('@MyBooks:books');
@@ -49,7 +46,19 @@ const ViewDetailBook: React.FC = () => {
     }
     return [];
   });
+  const [books, setBooks] = useState<Book[]>(() => {
+    const storagedBooks = localStorage.getItem('@MyBooks:books');
+
+    if (storagedBooks) {
+      return JSON.parse(storagedBooks);
+    }
+    return [];
+  });
+
   const { bookCategory } = useBookCategory();
+  const [bookCategoryTitle, setBookCategoryTitle] = useState('');
+
+  const history = useHistory();
 
   useEffect(() => {
     const bookFiltered = bookDetail.filter((book) => book.id === params.id);
@@ -58,12 +67,42 @@ const ViewDetailBook: React.FC = () => {
       (category) => category.id === bookFiltered[0].category,
     );
 
-    bookFiltered[0].category = bookCategoryFiltered[0].title;
-
     setBookDetail(bookFiltered);
+    setBookCategoryTitle(bookCategoryFiltered[0].title);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const handleMarlBookAsDeleted = useCallback(
+    (id: string) => {
+      try {
+        const bookIndex = books.findIndex((book) => book.id === id);
+
+        if (bookIndex >= 0) {
+          books[bookIndex].deleted = true;
+          setBooks(books);
+          localStorage.setItem('@MyBooks:books', JSON.stringify(books));
+        }
+        addToast({
+          type: 'success',
+          title: 'Book Deletion!',
+          description: 'The book was marked as deleted successfully.',
+        });
+
+        setTimeout(() => {
+          history.push('/');
+        }, 3000);
+      } catch (err) {
+        addToast({
+          type: 'error',
+          title: 'Error on Book Deletion!',
+          description:
+            'Occurred an error during book deletion, please check if the @MyBooks:books exists on local storage.',
+        });
+      }
+    },
+    [books, addToast, history],
+  );
 
   return (
     <>
@@ -78,13 +117,18 @@ const ViewDetailBook: React.FC = () => {
       <BookContainer>
         <div className="buttons">
           <Button type="button">Edit Book</Button>
-          <Button type="button">Delete Book</Button>
+          <Button
+            type="button"
+            onClick={() => handleMarlBookAsDeleted(bookDetail[0].id)}
+          >
+            Delete Book
+          </Button>
           <Button type="button">Edit Category</Button>
         </div>
         <div className="head">
           <div className="category">
             <span>Category </span>
-            <p>{bookDetail[0].category}</p>
+            <p>{bookCategoryTitle}</p>
           </div>
 
           <div className="creationDate">
@@ -114,78 +158,7 @@ const ViewDetailBook: React.FC = () => {
         </div>
       </BookContainer>
 
-      <CommentContainer>
-        <h1>Comments</h1>
-        <Form ref={formRef} onSubmit={() => {}}>
-          <div>
-            <Input name="comment" type="text" placeholder="Add a comment" />
-            <Button type="submit">Add</Button>
-          </div>
-        </Form>
-
-        <Comment>
-          <div className="container">
-            <div className="content">
-              <main>
-                <span>20/06/2020</span>
-              </main>
-              <aside>
-                <p>
-                  Comment Comment Comment Comment Comment Comment Comment
-                  Comment Comment Comment Comment Comment Comment
-                </p>
-              </aside>
-            </div>
-
-            <div className="buttons">
-              <Button type="button">Edit</Button>
-              <Button type="button">Delete</Button>
-            </div>
-          </div>
-        </Comment>
-
-        <Comment>
-          <div className="container">
-            <div className="content">
-              <main>
-                <span>20/06/2020</span>
-              </main>
-              <aside>
-                <p>
-                  Comment Comment Comment Comment Comment Comment Comment
-                  Comment Comment Comment Comment Comment Comment
-                </p>
-              </aside>
-            </div>
-
-            <div className="buttons">
-              <Button type="button">Edit</Button>
-              <Button type="button">Delete</Button>
-            </div>
-          </div>
-        </Comment>
-
-        <Comment>
-          <div className="container">
-            <div className="content">
-              <main>
-                <span>20/06/2020</span>
-              </main>
-              <aside>
-                <p>
-                  Comment Comment Comment Comment Comment Comment Comment
-                  Comment Comment Comment Comment Comment Comment
-                </p>
-              </aside>
-            </div>
-
-            <div className="buttons">
-              <Button type="button">Edit</Button>
-              <Button type="button">Delete</Button>
-            </div>
-          </div>
-        </Comment>
-      </CommentContainer>
+      <Comments bookId={bookDetail[0].id} />
     </>
   );
 };
