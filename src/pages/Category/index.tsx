@@ -1,6 +1,9 @@
+/* eslint-disable import/no-duplicates */
 import React, { useState, useEffect, useCallback, ChangeEvent } from 'react';
 import { useRouteMatch, Link, useHistory } from 'react-router-dom';
 import { FiArrowLeft, FiChevronRight } from 'react-icons/fi';
+import { format, parseISO } from 'date-fns';
+import pt from 'date-fns/locale/pt-BR';
 
 import { Category, Container, Book } from './styles';
 
@@ -108,7 +111,15 @@ const BookListByCategory: React.FC = () => {
             <Book>
               <main>
                 <strong>{book.title}</strong>
-                <span>{book.timestamp}</span>
+                <span>
+                  {format(
+                    parseISO(String(book.timestamp)),
+                    "dd'/'MM'/'yyyy HH:mm:ss.SSS",
+                    {
+                      locale: pt,
+                    },
+                  )}
+                </span>
               </main>
               <aside>
                 <p>{book.description}</p>
