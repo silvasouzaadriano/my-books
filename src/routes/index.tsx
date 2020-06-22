@@ -15,7 +15,7 @@ const Routes: React.FC = () => (
       component={BookListByCategory}
     />
     <Route path="/addbook" component={AddBook} />
-    <Route path="/editbook" component={EditBook} />
+    <Route path="/editbook/:id" component={EditBook} />
     <Route path="/viewdetailbook/:id" component={ViewDetailBook} />
   </Switch>
 );

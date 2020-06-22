@@ -1,5 +1,12 @@
 import React, { createContext, useContext } from 'react';
 
+export const BookCategoryOtions = [
+  { value: 'none', label: 'None' },
+  { value: 'reading', label: 'Currently Reading' },
+  { value: 'wantToRead', label: 'Wanto to React' },
+  { value: 'read', label: 'read' },
+];
+
 const bookCategoryData = [
   {
     id: 'none',

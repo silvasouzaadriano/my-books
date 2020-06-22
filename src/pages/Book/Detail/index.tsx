@@ -1,15 +1,10 @@
 /* eslint-disable import/no-duplicates */
-import React, { useRef, useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useRouteMatch, useHistory } from 'react-router-dom';
 import { FiArrowLeft } from 'react-icons/fi';
 import { format, parseISO } from 'date-fns';
 import pt from 'date-fns/locale/pt-BR';
 
-import { Form } from '@unform/web';
-
-import { FormHandles } from '@unform/core';
-
-import Input from '../../../components/Input';
 import Button from '../../../components/Button';
 
 import { useBookCategory } from '../../../context/BookCategoryContext';
@@ -116,7 +111,12 @@ const ViewDetailBook: React.FC = () => {
 
       <BookContainer>
         <div className="buttons">
-          <Button type="button">Edit Book</Button>
+          <Button
+            type="button"
+            onClick={() => history.push(`/editbook/${bookDetail[0].id}`)}
+          >
+            Edit Book
+          </Button>
           <Button
             type="button"
             onClick={() => handleMarlBookAsDeleted(bookDetail[0].id)}
