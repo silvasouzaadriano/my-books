@@ -1,8 +1,7 @@
-/* eslint-disable import/no-duplicates */
 import React, { useState, useEffect, useCallback, ChangeEvent } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { FiChevronRight } from 'react-icons/fi';
-import { format, parseISO } from 'date-fns';
+import { format, utcToZonedTime } from 'date-fns-tz';
 import pt from 'date-fns/locale/pt-BR';
 
 import { Categories, Container, Book } from './styles';
@@ -21,6 +20,8 @@ interface Book {
   category: string;
   deleted?: boolean;
 }
+
+const { timeZone } = Intl.DateTimeFormat().resolvedOptions();
 
 const Dashboard: React.FC = () => {
   const { bookCategory } = useBookCategory();
@@ -134,7 +135,7 @@ const Dashboard: React.FC = () => {
                 <strong>{book.title}</strong>
                 <span>
                   {format(
-                    parseISO(String(book.timestamp)),
+                    utcToZonedTime(book.timestamp, timeZone),
                     "dd'/'MM'/'yyyy HH:mm:ss.SSS",
                     {
                       locale: pt,

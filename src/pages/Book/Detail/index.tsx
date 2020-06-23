@@ -1,8 +1,7 @@
-/* eslint-disable import/no-duplicates */
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useRouteMatch, useHistory } from 'react-router-dom';
 import { FiArrowLeft } from 'react-icons/fi';
-import { format, parseISO } from 'date-fns';
+import { format, utcToZonedTime } from 'date-fns-tz';
 import pt from 'date-fns/locale/pt-BR';
 
 import Button from '../../../components/Button';
@@ -28,6 +27,8 @@ interface Book {
 interface BookIdParam {
   id: string;
 }
+
+const { timeZone } = Intl.DateTimeFormat().resolvedOptions();
 
 const ViewDetailBook: React.FC = () => {
   const { params } = useRouteMatch<BookIdParam>();
@@ -68,7 +69,7 @@ const ViewDetailBook: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleMarlBookAsDeleted = useCallback(
+  const handleMarkBookAsDeleted = useCallback(
     (id: string) => {
       try {
         const bookIndex = books.findIndex((book) => book.id === id);
@@ -113,13 +114,13 @@ const ViewDetailBook: React.FC = () => {
         <div className="buttons">
           <Button
             type="button"
-            onClick={() => history.push(`/editbook/${bookDetail[0].id}`)}
+            onClick={() => history.push(`/editbook/${params.id}`)}
           >
             Edit Book
           </Button>
           <Button
             type="button"
-            onClick={() => handleMarlBookAsDeleted(bookDetail[0].id)}
+            onClick={() => handleMarkBookAsDeleted(params.id)}
           >
             Delete Book
           </Button>
@@ -135,7 +136,7 @@ const ViewDetailBook: React.FC = () => {
             <span>Creation Date</span>
             <p>
               {format(
-                parseISO(String(bookDetail[0].timestamp)),
+                utcToZonedTime(bookDetail[0].timestamp, timeZone),
                 "dd'/'MM'/'yyyy HH:mm:ss.SSS",
                 {
                   locale: pt,
@@ -158,7 +159,7 @@ const ViewDetailBook: React.FC = () => {
         </div>
       </BookContainer>
 
-      <Comments bookId={bookDetail[0].id} />
+      <Comments bookId={params.id} />
     </>
   );
 };

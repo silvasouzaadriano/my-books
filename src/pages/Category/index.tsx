@@ -1,8 +1,7 @@
-/* eslint-disable import/no-duplicates */
 import React, { useState, useEffect, useCallback, ChangeEvent } from 'react';
 import { useRouteMatch, Link } from 'react-router-dom';
 import { FiArrowLeft, FiChevronRight } from 'react-icons/fi';
-import { format, parseISO } from 'date-fns';
+import { format, utcToZonedTime } from 'date-fns-tz';
 import pt from 'date-fns/locale/pt-BR';
 
 import { Category, Container, Book } from './styles';
@@ -21,6 +20,8 @@ interface BookCategoryParams {
   id: string;
   title: string;
 }
+
+const { timeZone } = Intl.DateTimeFormat().resolvedOptions();
 
 const BookListByCategory: React.FC = () => {
   const { params } = useRouteMatch<BookCategoryParams>();
@@ -112,7 +113,7 @@ const BookListByCategory: React.FC = () => {
                 <strong>{book.title}</strong>
                 <span>
                   {format(
-                    parseISO(String(book.timestamp)),
+                    utcToZonedTime(book.timestamp, timeZone),
                     "dd'/'MM'/'yyyy HH:mm:ss.SSS",
                     {
                       locale: pt,

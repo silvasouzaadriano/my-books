@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const Container = styled.div`
+export const Header = styled.div`
   max-width: 100%;
   margin-top: 40px;
 
@@ -21,6 +21,10 @@ export const Container = styled.div`
       width: 100%;
     }
 
+    input {
+      width: 100%;
+    }
+
     button {
       background-color: #04d361;
       font-size: 1.2vw;
@@ -33,7 +37,7 @@ export const Container = styled.div`
   }
 `;
 
-export const Content = styled.div`
+export const Comment = styled.div`
   margin-top: 10px;
   display: block;
   overflow: hidden;
@@ -43,56 +47,47 @@ export const Content = styled.div`
   border-radius: 5px;
   padding: 10px;
 
-  .container {
+  main {
     display: flex;
-    flex-direction: row;
-  }
+    align-items: center;
+    justify-content: space-between;
 
-  .content {
-    main {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-
-      strong {
-        font-size: 1.5vw;
-        color: #3d3d4d;
-        margin-right: 10px;
-      }
-
-      span {
-        color: #a8a8b3;
-      }
+    strong {
+      font-size: 1.5vw;
+      color: #3d3d4d;
+      margin-right: 10px;
     }
 
-    aside {
+    span {
+      color: #a8a8b3;
+    }
+  }
+
+  aside {
+    margin-top: 5px;
+    display: flex;
+    justify-content: space-between;
+
+    p {
+      align-items: left;
+      font-size: 1.2vw;
+      color: #a8a8b3;
       margin-top: 5px;
+    }
+    div {
       display: flex;
       flex-direction: row;
-      align-items: center;
+      margin-left: 10px;
 
-      p {
-        align-items: left;
-        font-size: 1.2vw;
-        color: #a8a8b3;
-        margin-top: 5px;
+      button {
+        background-color: #04d361;
+        font-size: 0.8vw;
+        width: 5vw;
+        height: 2vw;
+
+        text-align: center;
+        margin-left: 5px;
       }
-    }
-  }
-
-  .buttons {
-    display: flex;
-    flex-direction: row;
-    margin-left: 10px;
-
-    button {
-      background-color: #04d361;
-      font-size: 0.8vw;
-      width: 5vw;
-      height: 2vw;
-
-      text-align: center;
-      margin-left: 5px;
     }
   }
 `;
