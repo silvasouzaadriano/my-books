@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 
 import { format, utcToZonedTime } from 'date-fns-tz';
@@ -75,6 +74,7 @@ const Comments: React.FC<BookCommentsProps> = ({ bookId }) => {
       (book) => book.parentId === bookId && !book.deleted,
     );
     setBookCommentsFiltered(newBookComments);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleSubmit = useCallback(
@@ -152,6 +152,48 @@ const Comments: React.FC<BookCommentsProps> = ({ bookId }) => {
     [addToast, bookId],
   );
 
+  const handleMarkBookCommentAsDeleted = useCallback(
+    (id: string) => {
+      try {
+        // Set as delete the current book comment and then updating the localstorage
+        const bookCommentIndex = bookComments.findIndex(
+          (comment) => comment.id === id,
+        );
+
+        if (bookCommentIndex >= 0) {
+          // Recreating the state of bookComments with the book marked as deleted
+          // Also recreating the local storage with new state
+          bookComments[bookCommentIndex].deleted = true;
+          setBookComments(bookComments);
+          localStorage.setItem(
+            '@MyBooks:bookComments',
+            JSON.stringify(bookComments),
+          );
+
+          // Recreating the state of bookCommentFiltered with the new state of bookComments
+          const newBookCommentsFiltered: BookComments[] = bookComments.filter(
+            (book) => book.parentId === bookId && !book.deleted,
+          );
+          setBookCommentsFiltered(newBookCommentsFiltered);
+        }
+
+        addToast({
+          type: 'success',
+          title: 'Book Deletion!',
+          description: 'The book was marked as deleted successfully.',
+        });
+      } catch (err) {
+        addToast({
+          type: 'error',
+          title: 'Error on Book Comment Deletion!',
+          description:
+            'Occurred an error during book comment deletion, please check if the @MyBooks:bookComments exists on local storage.',
+        });
+      }
+    },
+    [bookComments, addToast, bookId],
+  );
+
   return (
     <>
       <Header>
@@ -185,7 +227,12 @@ const Comments: React.FC<BookCommentsProps> = ({ bookId }) => {
             <p>{comment.body}</p>
             <div>
               <Button type="button">Edit</Button>
-              <Button type="button">Delete</Button>
+              <Button
+                type="button"
+                onClick={() => handleMarkBookCommentAsDeleted(comment.id)}
+              >
+                Delete
+              </Button>
             </div>
           </aside>
         </Comment>
