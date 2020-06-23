@@ -50,6 +50,7 @@ const UpdateBook: React.FC = () => {
 
   const [bookCategories, setBookCategories] = useState<BookCategoryState[]>([]);
   const [bookCategoryId, setBookcategoryId] = useState('none');
+
   const [bookDetail, setBookDetail] = useState<Book[]>(() => {
     const storagedBooks = localStorage.getItem('@MyBooks:books');
 
@@ -176,7 +177,10 @@ const UpdateBook: React.FC = () => {
   const handleSelectCategory = useCallback(
     (event: ChangeEvent<HTMLSelectElement>) => {
       const bookCategorySelected = event.target.value;
-      setBookcategoryId(bookCategorySelected);
+
+      if (bookCategorySelected !== '0') {
+        setBookcategoryId(bookCategorySelected);
+      }
     },
     [],
   );
@@ -192,14 +196,15 @@ const UpdateBook: React.FC = () => {
       </Title>
       <Content>
         <Form ref={formRef} onSubmit={handleSubmit}>
-          <select name="category" id="category" onChange={handleSelectCategory}>
-            <option value="none">Select a category</option>
+          <select
+            name="category"
+            id="category"
+            onChange={handleSelectCategory}
+            value={bookCategoryId}
+          >
+            <option value="0">Select a category</option>
             {bookCategories.map((category) => (
-              <option
-                key={category.id}
-                value={category.id}
-                selected={category.id === bookDetail[0].category}
-              >
+              <option key={category.id} value={category.id}>
                 {category.title}
               </option>
             ))}

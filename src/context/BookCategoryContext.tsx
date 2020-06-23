@@ -1,9 +1,9 @@
 import React, { createContext, useContext } from 'react';
 
-export const BookCategoryOtions = [
+export const BookCategoryOptions = [
   { value: 'none', label: 'None' },
   { value: 'reading', label: 'Currently Reading' },
-  { value: 'wantToRead', label: 'Wanto to React' },
+  { value: 'wanttoread', label: 'Wanto to React' },
   { value: 'read', label: 'read' },
 ];
 
