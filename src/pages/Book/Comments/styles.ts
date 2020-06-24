@@ -91,3 +91,45 @@ export const Comment = styled.div`
     }
   }
 `;
+
+export const CommentModal = styled.div`
+  width: 60vw;
+  height: auto;
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  right: auto;
+  bottom: auto;
+  margin-right: -50%;
+  padding: 20px;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #ebf8ff;
+
+  h2 {
+    margin-bottom: 20px;
+  }
+
+  input {
+    width: 50vw;
+  }
+
+  div {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  button {
+    background-color: #04d361;
+    font-size: 1.2vw;
+    width: 5vw;
+    height: 5vh;
+    text-align: center;
+    margin-left: 6px;
+    padding: 5px;
+  }
+`;

@@ -1,18 +1,30 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+  ChangeEvent,
+} from 'react';
 import { Link, useRouteMatch, useHistory } from 'react-router-dom';
 import { FiArrowLeft } from 'react-icons/fi';
 import { format, utcToZonedTime } from 'date-fns-tz';
 import pt from 'date-fns/locale/pt-BR';
 
+import { Form } from '@unform/web';
+import { FormHandles } from '@unform/core';
+
 import Button from '../../../components/Button';
 
-import { useBookCategory } from '../../../context/BookCategoryContext';
+import {
+  useBookCategory,
+  BookCategoryState,
+} from '../../../context/BookCategoryContext';
 
 import { useToast } from '../../../context/ToastContext';
 
 import Comments from '../Comments';
 
-import { Header, BookContainer } from './styles';
+import { Header, BookContainer, BookDetailModal } from './styles';
 
 interface Book {
   id: string;
@@ -28,9 +40,16 @@ interface BookIdParam {
   id: string;
 }
 
+interface bookCategory {
+  value: string;
+  label: string;
+}
+
 const { timeZone } = Intl.DateTimeFormat().resolvedOptions();
 
 const ViewDetailBook: React.FC = () => {
+  const formRef = useRef<FormHandles>(null);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
   const { params } = useRouteMatch<BookIdParam>();
 
   const { addToast } = useToast();
@@ -53,21 +72,99 @@ const ViewDetailBook: React.FC = () => {
 
   const { bookCategory } = useBookCategory();
   const [bookCategoryTitle, setBookCategoryTitle] = useState('');
+  const [bookCategories, setBookCategories] = useState<BookCategoryState[]>([]);
+  const [bookCategoryId, setBookcategoryId] = useState('none');
 
   const history = useHistory();
 
-  useEffect(() => {
-    const bookFiltered = bookDetail.filter((book) => book.id === params.id);
-
-    const bookCategoryFiltered = bookCategory.filter(
-      (category) => category.id === bookFiltered[0].category,
-    );
-
-    setBookDetail(bookFiltered);
-    setBookCategoryTitle(bookCategoryFiltered[0].title);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  const openModal = useCallback(() => {
+    setModalIsOpen(true);
   }, []);
+
+  const closeModal = useCallback(() => {
+    setModalIsOpen(false);
+  }, []);
+
+  const handleSelectCategory = useCallback(
+    (event: ChangeEvent<HTMLSelectElement>) => {
+      const bookCategorySelected = event.target.value;
+
+      if (bookCategorySelected !== '0') {
+        setBookcategoryId(bookCategorySelected);
+      }
+    },
+    [],
+  );
+
+  const handleBookDetail = useCallback(async () => {
+    try {
+      const bookFiltered = books.filter((book) => book.id === params.id);
+
+      const bookCategoryFiltered = bookCategory.filter(
+        (category) => category.id === bookFiltered[0].category,
+      );
+
+      setBookDetail(bookFiltered);
+      setBookCategoryTitle(bookCategoryFiltered[0].title);
+      setBookcategoryId(bookFiltered[0].category);
+    } catch (err) {
+      addToast({
+        type: 'error',
+        title: 'Error on Update Category Book!',
+        description: 'Occurred an error during book category update.',
+      });
+    }
+  }, [addToast, bookCategory, books, params.id]);
+
+  const handleSubmit = useCallback(async () => {
+    try {
+      /**
+       * Begin
+       *
+       * Book category updated
+       */
+
+      const bookIndex = books.findIndex((book) => book.id === params.id);
+
+      if (bookIndex >= 0) {
+        books[bookIndex].category = bookCategoryId;
+        setBooks(books);
+        localStorage.setItem('@MyBooks:books', JSON.stringify(books));
+        handleBookDetail();
+      }
+
+      /**
+       * End
+       *
+       * Book category updated
+       */
+
+      closeModal();
+      history.push(`/viewdetailbook/${params.id}`);
+    } catch (err) {
+      addToast({
+        type: 'error',
+        title: 'Error on Update Category Book!',
+        description: 'Occurred an error during book category update.',
+      });
+    }
+  }, [
+    addToast,
+    bookCategoryId,
+    history,
+    books,
+    params.id,
+    handleBookDetail,
+    closeModal,
+  ]);
+
+  useEffect(() => {
+    setBookCategories(bookCategory);
+  }, [bookCategory]);
+
+  useEffect(() => {
+    handleBookDetail();
+  }, [handleBookDetail]);
 
   const handleMarkBookAsDeleted = useCallback(
     (id: string) => {
@@ -110,6 +207,31 @@ const ViewDetailBook: React.FC = () => {
         </Link>
       </Header>
 
+      {modalIsOpen && (
+        <BookDetailModal>
+          <h2>Edit Book Category</h2>
+          <Form ref={formRef} onSubmit={handleSubmit}>
+            <select
+              name="category"
+              id="category"
+              onChange={handleSelectCategory}
+              value={bookCategoryId}
+            >
+              <option value="0">Select a category</option>
+              {bookCategories.map((category) => (
+                <option key={category.id} value={category.id}>
+                  {category.title}
+                </option>
+              ))}
+            </select>
+            <Button type="submit">Update</Button>
+            <Button type="button" onClick={closeModal}>
+              Close
+            </Button>
+          </Form>
+        </BookDetailModal>
+      )}
+
       <BookContainer>
         <div className="buttons">
           <Button
@@ -124,7 +246,9 @@ const ViewDetailBook: React.FC = () => {
           >
             Delete Book
           </Button>
-          <Button type="button">Edit Category</Button>
+          <Button type="button" onClick={openModal}>
+            Edit Category
+          </Button>
         </div>
         <div className="head">
           <div className="category">

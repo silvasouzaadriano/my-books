@@ -18,11 +18,16 @@ import { useToast } from '../../../context/ToastContext';
 import Input from '../../../components/Input';
 import Button from '../../../components/Button';
 
-import { Header, Comment } from './styles';
+import { Header, Comment, CommentModal } from './styles';
 
 interface NewBookCommentsForm {
   author: string;
   body: string;
+}
+
+interface UpdateBookCommentsForm {
+  authorModal: string;
+  bodyModal: string;
 }
 
 interface BookComments {
@@ -43,6 +48,10 @@ const { timeZone } = Intl.DateTimeFormat().resolvedOptions();
 const Comments: React.FC<BookCommentsProps> = ({ bookId }) => {
   const formRef = useRef<FormHandles>(null);
   const { addToast } = useToast();
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [bookCommentId, setBookCommentId] = useState('');
+  const [bookCommentAuthor, setBookCommentAuthor] = useState('');
+  const [bookCommentBody, setBookCommentBody] = useState('');
   const [bookComments, setBookComments] = useState<BookComments[]>(() => {
     const storagedBookComments = localStorage.getItem('@MyBooks:bookComments');
 
@@ -75,6 +84,14 @@ const Comments: React.FC<BookCommentsProps> = ({ bookId }) => {
     );
     setBookCommentsFiltered(newBookComments);
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const openModal = useCallback(() => {
+    setModalIsOpen(true);
+  }, []);
+
+  const closeModal = useCallback(() => {
+    setModalIsOpen(false);
   }, []);
 
   const handleSubmit = useCallback(
@@ -152,6 +169,88 @@ const Comments: React.FC<BookCommentsProps> = ({ bookId }) => {
     [addToast, bookId],
   );
 
+  const handleUpdateSubmit = useCallback(
+    async (data: UpdateBookCommentsForm) => {
+      try {
+        formRef.current?.setErrors({});
+
+        // Validate the form
+        const schema = Yup.object().shape({
+          authorModal: Yup.string()
+            .required('Author is required')
+            .max(30, 'Author exceeded 30 characters'),
+          bodyModal: Yup.string()
+            .required('Message is required')
+            .max(100, 'Message exceeded 100 characters'),
+        });
+
+        await schema.validate(data, {
+          abortEarly: false,
+        });
+
+        /**
+         * Begin
+         *
+         * After validation, the book comment will be updated
+         */
+
+        const bookCommentIndex = bookComments.findIndex(
+          (comment) => comment.id === bookCommentId,
+        );
+
+        if (bookCommentIndex >= 0) {
+          // Recreating the state of bookComments with the book marked as deleted
+          // Also recreating the local storage with new state
+          bookComments[bookCommentIndex].author = data.authorModal;
+          bookComments[bookCommentIndex].body = data.bodyModal;
+          setBookComments(bookComments);
+          localStorage.setItem(
+            '@MyBooks:bookComments',
+            JSON.stringify(bookComments),
+          );
+
+          // Recreating the state of bookCommentFiltered with the new state of bookComments
+          const newBookCommentsFiltered: BookComments[] = bookComments.filter(
+            (book) => book.parentId === bookId && !book.deleted,
+          );
+          setBookCommentsFiltered(newBookCommentsFiltered);
+        }
+
+        /**
+         * End
+         *
+         * After validation, the book comment will be updated
+         */
+
+        setBookCommentId('');
+        setBookCommentAuthor('');
+        setBookCommentBody('');
+
+        closeModal();
+      } catch (err) {
+        if (err instanceof Yup.ValidationError) {
+          const errors = getValidationErrors(err);
+
+          formRef.current?.setErrors(errors);
+
+          return;
+        }
+
+        setBookCommentId('');
+        setBookCommentAuthor('');
+        setBookCommentBody('');
+        closeModal();
+        addToast({
+          type: 'error',
+          title: 'Error on Updating Comment!',
+          description:
+            'Occurred an error during book comment update, please fill the required fields.',
+        });
+      }
+    },
+    [addToast, closeModal, bookComments, bookId, bookCommentId],
+  );
+
   const handleMarkBookCommentAsDeleted = useCallback(
     (id: string) => {
       try {
@@ -194,6 +293,33 @@ const Comments: React.FC<BookCommentsProps> = ({ bookId }) => {
     [bookComments, addToast, bookId],
   );
 
+  const handleSetModalBookCommentForUpdate = useCallback(
+    (id: string) => {
+      try {
+        const modalBookComment = bookComments.filter(
+          (comment) => comment.id === id,
+        );
+
+        setBookCommentId(id);
+        setBookCommentAuthor(modalBookComment[0].author);
+        setBookCommentBody(modalBookComment[0].body);
+
+        openModal();
+      } catch (err) {
+        addToast({
+          type: 'error',
+          title: 'Error on set Book Comment for update!',
+          description:
+            'Occurred an error during seeting book comment for update, please check if the @MyBooks:bookComments exists on local storage.',
+        });
+        setBookCommentId('');
+        setBookCommentAuthor('');
+        setBookCommentBody('');
+      }
+    },
+    [bookComments, addToast, openModal],
+  );
+
   return (
     <>
       <Header>
@@ -208,6 +334,32 @@ const Comments: React.FC<BookCommentsProps> = ({ bookId }) => {
           </div>
         </Form>
       </Header>
+
+      {modalIsOpen && (
+        <CommentModal>
+          <h2>Edit Book Comment</h2>
+          <Form ref={formRef} onSubmit={handleUpdateSubmit}>
+            <Input
+              name="authorModal"
+              type="text"
+              placeholder="Author"
+              defaultValue={bookCommentAuthor}
+            />
+            <Input
+              name="bodyModal"
+              type="text"
+              placeholder="Comment"
+              defaultValue={bookCommentBody}
+            />
+            <div>
+              <Button type="submit">Update</Button>
+              <Button type="button" onClick={closeModal}>
+                Close
+              </Button>
+            </div>
+          </Form>
+        </CommentModal>
+      )}
 
       {bookCommentsFiltered.map((comment) => (
         <Comment key={comment.id}>
@@ -226,7 +378,12 @@ const Comments: React.FC<BookCommentsProps> = ({ bookId }) => {
           <aside>
             <p>{comment.body}</p>
             <div>
-              <Button type="button">Edit</Button>
+              <Button
+                type="button"
+                onClick={() => handleSetModalBookCommentForUpdate(comment.id)}
+              >
+                Edit
+              </Button>
               <Button
                 type="button"
                 onClick={() => handleMarkBookCommentAsDeleted(comment.id)}

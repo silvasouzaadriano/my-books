@@ -43,6 +43,15 @@ interface Book {
   deleted: boolean;
 }
 
+interface BookIdParam {
+  id: string;
+}
+
+interface bookCategory {
+  value: string;
+  label: string;
+}
+
 const UpdateBook: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
   const { bookCategory } = useBookCategory();
@@ -70,16 +79,7 @@ const UpdateBook: React.FC = () => {
 
   const history = useHistory();
 
-  interface BookIdParam {
-    id: string;
-  }
-
   const { params } = useRouteMatch<BookIdParam>();
-
-  interface bookCategory {
-    value: string;
-    label: string;
-  }
 
   useEffect(() => {
     setBookCategories(bookCategory);
@@ -125,7 +125,7 @@ const UpdateBook: React.FC = () => {
         /**
          * Begin
          *
-         * After validation,  a new book will be created
+         * After validation, the book will be updated
          */
 
         const bookIndex = books.findIndex((book) => book.id === params.id);
