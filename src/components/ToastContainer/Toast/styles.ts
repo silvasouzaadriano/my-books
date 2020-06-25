@@ -71,4 +71,9 @@ export const Container = styled(animated.div)<ContainerProps>`
         margin-top: 0;
       }
     `}
+
+  @media (max-width: 425px) {
+    width: 300px;
+    font-size: 1vh;
+  }
 `;

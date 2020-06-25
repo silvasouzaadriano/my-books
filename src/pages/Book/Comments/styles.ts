@@ -22,10 +22,6 @@ export const Header = styled.div`
       width: 100%;
     }
 
-    input {
-      width: 100%;
-    }
-
     button {
       background-color: #04d361;
       font-size: 14px;

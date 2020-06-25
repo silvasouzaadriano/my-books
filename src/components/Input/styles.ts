@@ -55,9 +55,23 @@ export const Container = styled.div<ContainerProps>`
       font-size: 14px;
       color: #bce0fd;
       font-weight: 700;
+
+      @media (max-width: 425px) {
+        font-size: 10px;
+      }
+
+    }
+
+    @media (max-width: 425px) {
+      font-size: 10px;
+      height: 50px;
     }
 
   }
+
+  @media (max-width: 425px) {
+      height: 50px;
+    }
 `;
 
 export const Error = styled(Tooltip)`

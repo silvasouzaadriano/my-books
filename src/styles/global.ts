@@ -13,8 +13,11 @@ export default createGlobalStyle`
     -webkit-font-smoothing: antialiased;
   }
 
-  body, input, button {
+  body, input, button, span, strong, p {
     font: 1vw Roboto, sans-serif;
+    @media (max-width: 425px) {
+      font-size: 2vw;
+    }
   }
 
   #root {
@@ -26,5 +29,7 @@ export default createGlobalStyle`
   button {
     cursor: pointer;
   }
+
+
 
 `;
