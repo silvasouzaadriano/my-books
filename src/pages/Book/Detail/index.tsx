@@ -217,7 +217,7 @@ const ViewDetailBook: React.FC = () => {
               onChange={handleSelectCategory}
               value={bookCategoryId}
             >
-              <option value="0">Select a category</option>
+              <option value="0">Choose a category</option>
               {bookCategories.map((category) => (
                 <option key={category.id} value={category.id}>
                   {category.title}
@@ -261,7 +261,7 @@ const ViewDetailBook: React.FC = () => {
             <p>
               {format(
                 utcToZonedTime(bookDetail[0].timestamp, timeZone),
-                "dd'/'MM'/'yyyy HH:mm:ss.SSS",
+                "dd'/'MM'/'yyyy HH:mm:ss",
                 {
                   locale: pt,
                 },

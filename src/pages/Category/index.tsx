@@ -85,7 +85,7 @@ const BookListByCategory: React.FC = () => {
             id="book-ordering"
             onChange={handleBookSort}
           >
-            <option value="none">Select a ordering</option>
+            <option value="none">Sort by</option>
             <option value="title">Title</option>
             <option value="date">Date</option>
           </select>
@@ -114,7 +114,7 @@ const BookListByCategory: React.FC = () => {
                 <span>
                   {format(
                     utcToZonedTime(book.timestamp, timeZone),
-                    "dd'/'MM'/'yyyy HH:mm:ss.SSS",
+                    "dd'/'MM'/'yyyy HH:mm:ss",
                     {
                       locale: pt,
                     },

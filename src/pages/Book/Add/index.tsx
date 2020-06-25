@@ -161,7 +161,7 @@ const AddBook: React.FC = () => {
       <Content>
         <Form ref={formRef} onSubmit={handleSubmit}>
           <select name="category" id="category" onChange={handleSelectCategory}>
-            <option value="none">Select a category</option>
+            <option value="none">Choose a category</option>
             {bookCategories.map((category) => (
               <option key={category.id} value={category.id}>
                 {category.title}

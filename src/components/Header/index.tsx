@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 import { Container } from './styles';
 
@@ -7,8 +8,12 @@ import logoImg from '../../assets/logo.jpg';
 const Header: React.FC = () => {
   return (
     <Container>
-      <img src={logoImg} alt="My Books" />
-      <h1>MyBooks</h1>
+      <Link to="/">
+        <div>
+          <img src={logoImg} alt="My Books" />
+          <h1>MyBooks</h1>
+        </div>
+      </Link>
     </Container>
   );
 };

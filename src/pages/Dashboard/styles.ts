@@ -7,18 +7,30 @@ export const Categories = styled.div`
   align-items: center;
   margin-top: 50px;
 
-  strong {
+  select {
+    appearance: none;
+    background: #04d361;
+    border-radius: 8px;
+    border: none;
+    color: #fff;
+    font-weight: 700;
+    padding: 10px;
     margin-right: 16px;
-  }
+    transition: background-color 0.2s;
 
-  a {
-    color: #3a3a3a;
-    text-decoration: none;
-    margin-right: 16px;
-    transition: color 0.2s;
+    &:focus {
+      outline: none;
+    }
 
     &:hover {
-      color: ${shade(0.2, '#04d361')};
+      cursor: pointer;
+      background: ${shade(0.2, '#04d361')};
+    }
+
+    @media (max-width: 425px) {
+      width: 100px;
+      height: 30px;
+      font-size: 1.2vh;
     }
   }
 
@@ -30,36 +42,8 @@ export const Categories = styled.div`
     border: 0;
     color: #fff;
     font-weight: bold;
-    font-size: 2.5vh;
-    transition: background-color 0.2s;
+    font-size: 16px;
     flex-wrap: wrap;
-
-    &:hover {
-      background: ${shade(0.2, '#04d361')};
-    }
-
-    @media (max-width: 768px) {
-      font-size: 2.5vh;
-    }
-
-    @media (max-width: 425px) {
-      width: 60px;
-      height: 30px;
-      font-size: 2vh;
-    }
-  }
-
-  select {
-    width: 130px;
-    height: 35px;
-    appearance: none;
-    background: #04d361;
-    border-radius: 8px;
-    border: 0;
-    color: #fff;
-    font-weight: bold;
-    padding: 10px;
-    margin-right: 16px;
     transition: background-color 0.2s;
 
     &:hover {
@@ -67,18 +51,23 @@ export const Categories = styled.div`
     }
 
     @media (max-width: 425px) {
-      width: 90px;
+      width: 40px;
       height: 30px;
-      font-size: 2vh;
+      font-size: 1.2vh;
     }
   }
 `;
 
 export const Container = styled.div`
-  max-width: 100%;
+  max-width: 65vw;
   margin-top: 50px;
   a {
+    display: block;
     text-decoration: none;
+    transition: transform 0.2s;
+    &:hover {
+      transform: translateX(10px);
+    }
   }
 `;
 

@@ -278,8 +278,8 @@ const Comments: React.FC<BookCommentsProps> = ({ bookId }) => {
 
         addToast({
           type: 'success',
-          title: 'Book Deletion!',
-          description: 'The book was marked as deleted successfully.',
+          title: 'Book Comment Deletion!',
+          description: 'The book comment was marked as deleted successfully.',
         });
       } catch (err) {
         addToast({
@@ -368,7 +368,7 @@ const Comments: React.FC<BookCommentsProps> = ({ bookId }) => {
             <span>
               {format(
                 utcToZonedTime(comment.timestamp, timeZone),
-                "dd'/'MM'/'yyyy HH:mm:ss.SSS",
+                "dd'/'MM'/'yyyy HH:mm:ss",
                 {
                   locale: pt,
                 },

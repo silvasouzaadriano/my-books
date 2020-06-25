@@ -49,12 +49,25 @@ export const BookContainer = styled.div`
     align-items: center;
 
     button {
+      width: 120px;
+      height: 35px;
       background-color: #04d361;
-      font-size: 1.2vw;
-      width: 10vw;
-      height: 5vh;
+      font-size: 14px;
+      font-weight: bold;
       text-align: center;
-      margin-right: 20px;
+      margin-right: 15px;
+
+      transition: background-color 0.2s;
+
+      &:hover {
+        background: ${shade(0.2, '#04d361')};
+      }
+
+      @media (max-width: 425px) {
+        width: 65px;
+        height: 15px;
+        font-size: 5px;
+      }
     }
   }
 
@@ -88,11 +101,18 @@ export const BookDetailModal = styled.div`
 
   button {
     background-color: #04d361;
-    font-size: 1.2vw;
-    width: 5vw;
-    height: 5vh;
+    font-size: 12px;
+    width: 50px;
+    height: 20px;
+    font-weight: bold;
     text-align: center;
     margin-left: 6px;
-    padding: 5px;
+    padding: 2px;
+
+    transition: background-color 0.2s;
+
+    &:hover {
+      background: ${shade(0.2, '#04d361')};
+    }
   }
 `;

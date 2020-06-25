@@ -32,21 +32,32 @@ export const Content = styled.div`
   margin-top: 50px;
 
   select {
-    /* width: 130px;
-    height: 35px; */
-
     margin-bottom: 10px;
     background: #f5f5f5;
-    border: 1px solid #bce0fd;
     padding: 16px;
     width: 100%;
     color: #bce0fd;
+    font-weight: 700;
+    border: 0;
 
     display: flex;
     align-items: center;
+
+    &:hover {
+      cursor: pointer;
+    }
+
+    option {
+      font-weight: 700;
+    }
   }
 
   button {
     background-color: #04d361;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background: ${shade(0.2, '#04d361')};
+    }
   }
 `;

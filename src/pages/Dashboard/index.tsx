@@ -105,7 +105,7 @@ const Dashboard: React.FC = () => {
           id="book-category"
           onChange={handleSelectCategory}
         >
-          <option value="0">Select a category</option>
+          <option value="0">Choose a category</option>
           {bookCategories.map((category) => (
             <option key={category.id} value={category.id}>
               {category.title}
@@ -113,12 +113,8 @@ const Dashboard: React.FC = () => {
           ))}
         </select>
 
-        <select
-          name="book-ordering"
-          id="book-ordering"
-          onChange={handleBookSort}
-        >
-          <option value="none">Select a ordering</option>
+        <select name="book-sort" id="book-sort" onChange={handleBookSort}>
+          <option value="none">Sort by</option>
           <option value="title">Title</option>
           <option value="date">Date</option>
         </select>
@@ -136,7 +132,7 @@ const Dashboard: React.FC = () => {
                 <span>
                   {format(
                     utcToZonedTime(book.timestamp, timeZone),
-                    "dd'/'MM'/'yyyy HH:mm:ss.SSS",
+                    "dd'/'MM'/'yyyy HH:mm:ss",
                     {
                       locale: pt,
                     },

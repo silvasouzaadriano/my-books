@@ -22,36 +22,7 @@ export const Category = styled.div`
       font-weight: 100;
     }
 
-    button {
-      width: 95px;
-      height: 35px;
-      background: #04d361;
-      border-radius: 8px;
-      border: 0;
-      color: #fff;
-      font-weight: bold;
-      font-size: 2.5vh;
-      transition: background-color 0.2s;
-      flex-wrap: wrap;
-
-      &:hover {
-        background: ${shade(0.2, '#04d361')};
-      }
-
-      @media (max-width: 768px) {
-        font-size: 2.5vh;
-      }
-
-      @media (max-width: 425px) {
-        width: 60px;
-        height: 30px;
-        font-size: 2vh;
-      }
-    }
-
     select {
-      width: 130px;
-      height: 35px;
       appearance: none;
       background: #04d361;
       border-radius: 8px;
@@ -63,13 +34,39 @@ export const Category = styled.div`
       transition: background-color 0.2s;
 
       &:hover {
+        cursor: pointer;
         background: ${shade(0.2, '#04d361')};
       }
 
       @media (max-width: 425px) {
-        width: 90px;
-        height: 30px;
-        font-size: 2vh;
+        width: 40px;
+        height: 15px;
+        font-size: 0.8vh;
+        padding: 3px;
+      }
+    }
+
+    button {
+      width: 95px;
+      height: 35px;
+      background: #04d361;
+      border-radius: 8px;
+      border: 0;
+      color: #fff;
+      font-weight: bold;
+      font-size: 16px;
+      flex-wrap: wrap;
+      transition: background-color 0.2s;
+
+      &:hover {
+        background: ${shade(0.2, '#04d361')};
+      }
+
+      @media (max-width: 425px) {
+        width: 35px;
+        height: 15px;
+        font-size: 0.8vh;
+        margin-right: 10px;
       }
     }
   }
@@ -100,7 +97,12 @@ export const Container = styled.div`
   max-width: 100%;
   margin-top: 50px;
   a {
+    display: block;
     text-decoration: none;
+    transition: transform 0.2s;
+    &:hover {
+      transform: translateX(10px);
+    }
   }
 `;
 

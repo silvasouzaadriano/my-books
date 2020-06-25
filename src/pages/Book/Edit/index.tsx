@@ -188,7 +188,7 @@ const UpdateBook: React.FC = () => {
   return (
     <>
       <Title>
-        <h1>Update Book</h1>
+        <h1>Edit Book</h1>
         <Link to={() => `/viewdetailbook/${params.id}`}>
           <FiArrowLeft />
           Back to Book Detail
@@ -202,7 +202,7 @@ const UpdateBook: React.FC = () => {
             onChange={handleSelectCategory}
             value={bookCategoryId}
           >
-            <option value="0">Select a category</option>
+            <option value="0">Choose a category</option>
             {bookCategories.map((category) => (
               <option key={category.id} value={category.id}>
                 {category.title}
