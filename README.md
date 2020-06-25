@@ -2,22 +2,6 @@
     MyBooks
 </h1>
 
-<h1 align="center">
-    <img alt="MyBooks" title="MyBooks" src="utils/myBooks_dashboard.png" width="100px" />
-    <img alt="MyBooks" title="MyBooks" src="utils/myBooks_dashboard_by_category.png" width="100px" />
-    <img alt="MyBooks" title="MyBooks" src="utils/myBooks_create.png" width="100px" />
-    <img alt="MyBooks" title="MyBooks" src="utils/myBooks_detail.png" width="100px" />
-    <img alt="MyBooks" title="MyBooks" src="utils/myBooks_update.png" width="100px" />
-    <img alt="MyBooks" title="MyBooks" src="utils/myBooks_delete.png" width="100px" />
-    <img alt="MyBooks" title="MyBooks" src="utils/myBooks_edit_category.png" width="100px" />
-    <img alt="MyBooks" title="MyBooks" src="utils/myBooks_edit_comment.png" width="100px" />
-</h1>
-
-<p align="center">
-<a href="#concepts">Concepts</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-  <a href="#technologies">Technologies</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-  <a href="#how-to-use">How to use</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-</p>
 
 ## 💻 Concepts
 
