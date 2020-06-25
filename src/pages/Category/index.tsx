@@ -6,6 +6,8 @@ import pt from 'date-fns/locale/pt-BR';
 
 import { Category, Container, Book } from './styles';
 
+import { useToast } from '../../context/ToastContext';
+
 interface Book {
   id: string;
   timestamp: Date;
@@ -21,10 +23,12 @@ interface BookCategoryParams {
   title: string;
 }
 
-const { timeZone } = Intl.DateTimeFormat().resolvedOptions();
-
 const BookListByCategory: React.FC = () => {
+  // This variable store the id and category title to be used as filter(id) and information(title)
   const { params } = useRouteMatch<BookCategoryParams>();
+
+  // This state store all books and is used as database
+  // to get the books (getBooks function) to be populated on screen
   const [books, setBooks] = useState<Book[]>(() => {
     const storagedBooks = localStorage.getItem('@MyBooks:books');
 
@@ -34,25 +38,58 @@ const BookListByCategory: React.FC = () => {
     return [];
   });
 
+  // This state store the books to be populated on screen and is
+  // filtered by the category default none.
+  const [booksFiltered, setBooksFiltered] = useState<Book[]>(() => {
+    const storagedBooks = localStorage.getItem('@MyBooks:books');
+
+    if (storagedBooks) {
+      return JSON.parse(storagedBooks);
+    }
+    return [];
+  });
+
+  // This variable is used to filter the books by category on getBooks function
   const bookCategoryId = params.id;
 
-  useEffect(() => {
-    const newBookList: Book[] = books
-      .filter((book) => book.category === bookCategoryId && !book.deleted)
-      .sort(function compare(a, b) {
-        if (a.title < b.title) return -1;
-        if (a.title > b.title) return 1;
-        return 0;
-      });
-    setBooks(newBookList);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // This variable stores the time zone to be used to format the timestamp book field
+  const { timeZone } = Intl.DateTimeFormat().resolvedOptions();
 
+  // This variable store the toast message method to be used in validations, warnings, etc.
+  const { addToast } = useToast();
+
+  // This function get all books filtering by category (bookCategoryId)
+  // and sorting the data by title as default
+  const getBooks = useCallback(async () => {
+    try {
+      const newBookList: Book[] = books
+        .filter((book) => book.category === bookCategoryId && !book.deleted)
+        .sort(function compare(a, b) {
+          if (a.title < b.title) return -1;
+          if (a.title > b.title) return 1;
+          return 0;
+        });
+      setBooksFiltered(newBookList);
+    } catch (err) {
+      addToast({
+        type: 'error',
+        title: 'Error on Load Books!',
+        description:
+          'Occurred an error during load books. Verify if the @MyBooks:books exists on local storage.',
+      });
+    }
+  }, [addToast, books, bookCategoryId]);
+
+  useEffect(() => {
+    getBooks();
+  }, [getBooks]);
+
+  // This function sort the books or by timestamp (asc) or by title (asc)
   const handleBookSort = useCallback(
     (event: ChangeEvent<HTMLSelectElement>) => {
       const bookSortSelected = event.target.value;
       if (bookSortSelected !== 'none') {
-        const newBookList: Book[] = books
+        const newBookList: Book[] = booksFiltered
           .filter((book) => book.category === bookCategoryId && !book.deleted)
           .sort(function compare(a, b) {
             if (bookSortSelected === 'date') {
@@ -64,12 +101,14 @@ const BookListByCategory: React.FC = () => {
             }
             return 0;
           });
-        setBooks(newBookList);
+        setBooksFiltered(newBookList);
+        setBooks(books);
       } else {
+        setBooksFiltered(booksFiltered);
         setBooks(books);
       }
     },
-    [books, bookCategoryId],
+    [books, booksFiltered, bookCategoryId],
   );
 
   return (
@@ -106,7 +145,7 @@ const BookListByCategory: React.FC = () => {
       </Category>
 
       <Container>
-        {books.map((book) => (
+        {booksFiltered.map((book) => (
           <Link to={`/viewdetailbook/${book.id}`} key={book.id}>
             <Book>
               <main>

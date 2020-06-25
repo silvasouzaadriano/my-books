@@ -61,6 +61,9 @@ const ViewDetailBook: React.FC = () => {
     }
     return [];
   });
+
+  // This state store all books and is used as database
+  // to get the books to be used in handleBookDetail
   const [books, setBooks] = useState<Book[]>(() => {
     const storagedBooks = localStorage.getItem('@MyBooks:books');
 
@@ -96,6 +99,7 @@ const ViewDetailBook: React.FC = () => {
     [],
   );
 
+  // This function get the book and prepare bookDetail state to use it
   const handleBookDetail = useCallback(async () => {
     try {
       const bookFiltered = books.filter((book) => book.id === params.id);
@@ -116,7 +120,9 @@ const ViewDetailBook: React.FC = () => {
     }
   }, [addToast, bookCategory, books, params.id]);
 
-  const handleSubmit = useCallback(async () => {
+  // This fuction, based on category choosen, cange the book category
+  // and rebuild the state of bookDetail
+  const handleChangeCategorySubmit = useCallback(async () => {
     try {
       /**
        * Begin
@@ -210,7 +216,7 @@ const ViewDetailBook: React.FC = () => {
       {modalIsOpen && (
         <BookDetailModal>
           <h2>Edit Book Category</h2>
-          <Form ref={formRef} onSubmit={handleSubmit}>
+          <Form ref={formRef} onSubmit={handleChangeCategorySubmit}>
             <select
               name="category"
               id="category"

@@ -54,6 +54,7 @@ interface bookCategory {
 
 const UpdateBook: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
+  const { params } = useRouteMatch<BookIdParam>();
   const { bookCategory } = useBookCategory();
   const { addToast } = useToast();
 
@@ -79,26 +80,35 @@ const UpdateBook: React.FC = () => {
 
   const history = useHistory();
 
-  const { params } = useRouteMatch<BookIdParam>();
-
   useEffect(() => {
     setBookCategories(bookCategory);
-  }, [bookCategory]);
+    setBookDetail(bookDetail);
+  }, [bookCategory, bookDetail]);
+
+  const handleBookDetail = useCallback(async () => {
+    try {
+      const bookFiltered = books.filter((book) => book.id === params.id);
+
+      setBookDetail(bookFiltered);
+
+      setBookcategoryId(bookFiltered[0].category);
+
+      formRef.current?.setData({ category: bookFiltered[0].category });
+      formRef.current?.setData({ title: bookFiltered[0].title });
+      formRef.current?.setData({ description: bookFiltered[0].description });
+      formRef.current?.setData({ author: bookFiltered[0].author });
+    } catch (err) {
+      addToast({
+        type: 'error',
+        title: 'Error on Update Category Book!',
+        description: 'Occurred an error during book category update.',
+      });
+    }
+  }, [addToast, books, params.id]);
 
   useEffect(() => {
-    const bookFiltered = bookDetail.filter((book) => book.id === params.id);
-
-    setBookDetail(bookFiltered);
-
-    setBookcategoryId(bookFiltered[0].category);
-
-    formRef.current?.setData({ category: bookFiltered[0].category });
-    formRef.current?.setData({ title: bookFiltered[0].title });
-    formRef.current?.setData({ description: bookFiltered[0].description });
-    formRef.current?.setData({ author: bookFiltered[0].author });
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    handleBookDetail();
+  }, [handleBookDetail]);
 
   const handleSubmit = useCallback(
     async (data: UpdateBookFormData) => {
@@ -188,7 +198,7 @@ const UpdateBook: React.FC = () => {
   return (
     <>
       <Title>
-        <h1>Edit Book</h1>
+        <h1>Update Book</h1>
         <Link to={() => `/viewdetailbook/${params.id}`}>
           <FiArrowLeft />
           Back to Book Detail
@@ -202,7 +212,7 @@ const UpdateBook: React.FC = () => {
             onChange={handleSelectCategory}
             value={bookCategoryId}
           >
-            <option value="0">Choose a category</option>
+            <option value="0">Select a category</option>
             {bookCategories.map((category) => (
               <option key={category.id} value={category.id}>
                 {category.title}

@@ -94,6 +94,7 @@ const Comments: React.FC<BookCommentsProps> = ({ bookId }) => {
     setModalIsOpen(false);
   }, []);
 
+  // This function handle the process about a new comment
   const handleSubmit = useCallback(
     async (data: NewBookCommentsForm) => {
       try {
@@ -169,7 +170,8 @@ const Comments: React.FC<BookCommentsProps> = ({ bookId }) => {
     [addToast, bookId],
   );
 
-  const handleUpdateSubmit = useCallback(
+  // This function handle the comment updated based based on modal fields
+  const handleUpdateCommentSubmit = useCallback(
     async (data: UpdateBookCommentsForm) => {
       try {
         formRef.current?.setErrors({});
@@ -251,6 +253,8 @@ const Comments: React.FC<BookCommentsProps> = ({ bookId }) => {
     [addToast, closeModal, bookComments, bookId, bookCommentId],
   );
 
+  // Based on modal delete button, which receives the comment id, this function
+  // handle the process to mark the the comment as deleted.
   const handleMarkBookCommentAsDeleted = useCallback(
     (id: string) => {
       try {
@@ -293,6 +297,7 @@ const Comments: React.FC<BookCommentsProps> = ({ bookId }) => {
     [bookComments, addToast, bookId],
   );
 
+  // This function,  based on comment to be changed, prepare the modal fields with it values
   const handleSetModalBookCommentForUpdate = useCallback(
     (id: string) => {
       try {
@@ -338,7 +343,7 @@ const Comments: React.FC<BookCommentsProps> = ({ bookId }) => {
       {modalIsOpen && (
         <CommentModal>
           <h2>Edit Book Comment</h2>
-          <Form ref={formRef} onSubmit={handleUpdateSubmit}>
+          <Form ref={formRef} onSubmit={handleUpdateCommentSubmit}>
             <Input
               name="authorModal"
               type="text"
